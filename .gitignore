@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+/train
+/save_model
+/train_data
+/val_data

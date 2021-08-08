@@ -4,7 +4,6 @@ __copyright__ = "Copyright (C) 2016-2021"
 __license__ = "AGPL"
 __email__ = "pyquino@gmail.com"
 
-from core.model_tmp import fcn_32
 from torchsummary import summary
 import torch
 import torch.nn as nn
@@ -21,19 +20,17 @@ import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sementic_seg_dataloader import CLASIFER, showimg, mean_iou_score
+from sementic_seg_dataloader import CLASIFER, showimg, mean_iou_score, TOOLDATA
 
 
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
-print(device)
 
 
-def train(model, epoch, log_interval=100):
+def train(model, epoch, log_interval=5):
     optimizer = optim.Adam(model.parameters(), 1e-5)
     criterion = nn.CrossEntropyLoss()
     model.train()  # Important: set training mode
-
     iteration = 0
     for ep in range(epoch):
         for batch_idx, (data, target) in enumerate(trainloader):
@@ -53,7 +50,7 @@ def train(model, epoch, log_interval=100):
             iteration += 1
 
         accuracy = test(model, valsetloader)  # Evaluate at the end of each epoch
-        acc_train = test(model, trainloader1)
+        acc_train = test(model, trainloader)
         print(f"accuracy of train data {acc_train}, acc for val {accuracy}")
         # if accuracy > 0.66:
         #     torch.save(model.state_dict(), f"save_model/{ep}_{accuracy:.2f}.pt")
@@ -77,7 +74,7 @@ def test(model, valsetloader):
                 tar = target[i]
                 iou_outputs.append(out.cpu().detach().numpy())
                 iou_labels.append(tar.cpu().detach().numpy())
-
+        
         meaniou = mean_iou_score(np.concatenate(iou_outputs), np.concatenate(iou_labels))
         # print(f"mean iou accuracy {t}")
     return meaniou
@@ -104,7 +101,7 @@ def pred_one_image(model, valsetloader):
                 tar = target[i]
                 iou_outputs.append(out.cpu().detach().numpy())
                 iou_labels.append(tar.cpu().detach().numpy())
-
+        exit()
         t = 0
         meaniou = mean_iou_score(np.concatenate(iou_outputs), np.concatenate(iou_labels))
         print(f"mean iou accuracy {meaniou}")
@@ -113,19 +110,25 @@ def pred_one_image(model, valsetloader):
 
 if __name__ == '__main__':
 
-    trainset = CLASIFER(root="hw2_data/p2_data/train", val_or_test=False, transform=transforms.ToTensor())
-    valset = CLASIFER(root="hw2_data/p2_data/validation", val_or_test=True)
+    trainset = TOOLDATA(root="train_data/image/imm", val_or_test=False, transform=transforms.ToTensor())
+    valset = TOOLDATA(root="val_data/imm", val_or_test=False, transform=transforms.ToTensor())
+    
+    # print(trainset[0])
+    
+    # print(trainset[0][1])
+    # exit()
 
     trainloader = DataLoader(trainset, batch_size=4, shuffle=True, num_workers=2)
     valsetloader = DataLoader(valset, batch_size=1, shuffle=False, num_workers=1)
 
-    model = UNet(n_channels=3, n_classes=7)
-    model.load_state_dict(torch.load("save_model/85_0.68.pt"))
-    model.to(device)
-    pred_one_image(model, valsetloader)
-    exit()
+    # model = UNet(n_channels=1, n_classes=2)
+    # model.load_state_dict(torch.load("save_model/85_0.68.pt"))
+    # model.to(device)
+    # pred_one_image(model, valsetloader)
+    # exit()
 
-    model = UNet(n_channels=3, n_classes=7)
+    model = UNet(n_channels=1, n_classes=2)
+    model.to(device)   
     model.to(device)
     train(model, 90)
     torch.save(model.state_dict(), "save_model/unet_t.pt")
