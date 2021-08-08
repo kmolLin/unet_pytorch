@@ -75,7 +75,7 @@ def mean_iou_score(pred, labels):
         tp_fn = np.sum(labels == i)
         tp = np.sum((pred == i) * (labels == i))
         iou = tp / (tp_fp + tp_fn - tp)
-        mean_iou += iou / 2
+        mean_iou += iou / 2.0
         # print('class #%d : %1.5f'%(i, iou))
     # print('\nmean_iou: %f\n' % mean_iou)
 
@@ -201,9 +201,9 @@ class TOOLDATA(Dataset):
         # mask = TF.crop(mask, i, j, h, w)
 
         # Random horizontal flipping
-        # if random.random() > 0.5:
-        #     image = TF.hflip(image)
-        #     mask = TF.hflip(mask)
+        if random.random() > 0.5:
+            image = TF.hflip(image)
+            mask = TF.hflip(mask)
 
         # Random vertical flipping
         # if random.random() > 0.5:

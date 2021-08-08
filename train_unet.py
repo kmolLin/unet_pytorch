@@ -13,6 +13,7 @@ from torchvision import transforms
 from PIL import Image
 from torch import  optim
 from core.unet import UNet
+import torchvision.transforms as T
 
 import os
 import math
@@ -52,8 +53,8 @@ def train(model, epoch, log_interval=5):
         accuracy = test(model, valsetloader)  # Evaluate at the end of each epoch
         acc_train = test(model, trainloader)
         print(f"accuracy of train data {acc_train}, acc for val {accuracy}")
-        # if accuracy > 0.66:
-        #     torch.save(model.state_dict(), f"save_model/{ep}_{accuracy:.2f}.pt")
+        if accuracy > 0.66:
+            torch.save(model.state_dict(), f"save_model/{ep}_{accuracy:.2f}.pt")
 
 
 def test(model, valsetloader):
@@ -81,6 +82,8 @@ def test(model, valsetloader):
 
 
 def pred_one_image(model, valsetloader):
+
+
 
     # print(valset[21])
 
@@ -113,12 +116,27 @@ if __name__ == '__main__':
     trainset = TOOLDATA(root="train_data/image/imm", val_or_test=False, transform=transforms.ToTensor())
     valset = TOOLDATA(root="val_data/imm", val_or_test=False, transform=transforms.ToTensor())
     
+    # model = UNet(n_channels=1, n_classes=2)
+    # model.load_state_dict(torch.load("save_model/2_0.93.pt"))
+    # model.eval()
+    # with torch.no_grad():
+        # transforms = T.Compose([T.ToTensor()])
+        # data, label = valset[0]
+        # print(data)
+        # output = model(data.unsqueeze(0))
+        # output = torch.argmax(output, dim=1)
+    # print(output.size())
+    # imgg = showimg(output.permute(1, 2, 0))
+   
+    # plt.imshow(imgg)
+    # plt.show()
+    # exit()
     # print(trainset[0])
     
     # print(trainset[0][1])
     # exit()
 
-    trainloader = DataLoader(trainset, batch_size=4, shuffle=True, num_workers=2)
+    trainloader = DataLoader(trainset, batch_size=8, shuffle=True, num_workers=4)
     valsetloader = DataLoader(valset, batch_size=1, shuffle=False, num_workers=1)
 
     # model = UNet(n_channels=1, n_classes=2)
