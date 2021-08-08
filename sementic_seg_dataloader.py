@@ -31,7 +31,7 @@ from PIL import Image
 #                      ])
 
 colormap = np.array([(0, 0, 0),  # 0=Unknow
-                     (255, 255, 255),  # 1=Barren,
+                     (255, 255, 0),  # 1=Barren,
                     ])
 # classes = ['Unknow', 'Barren', 'Water', 'Forest', 'Rangeland', 'Agriculture', 'Urban']
 classes = ["BackGround", "Tool Flank"]

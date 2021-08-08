@@ -116,21 +116,21 @@ if __name__ == '__main__':
     trainset = TOOLDATA(root="train_data/image/imm", val_or_test=False, transform=transforms.ToTensor())
     valset = TOOLDATA(root="val_data/imm", val_or_test=False, transform=transforms.ToTensor())
     
-    # model = UNet(n_channels=1, n_classes=2)
-    # model.load_state_dict(torch.load("save_model/2_0.93.pt"))
-    # model.eval()
-    # with torch.no_grad():
-        # transforms = T.Compose([T.ToTensor()])
-        # data, label = valset[0]
-        # print(data)
-        # output = model(data.unsqueeze(0))
-        # output = torch.argmax(output, dim=1)
-    # print(output.size())
-    # imgg = showimg(output.permute(1, 2, 0))
+    model = UNet(n_channels=1, n_classes=2)
+    model.load_state_dict(torch.load("save_model/unet_t.pt"))
+    model.eval()
+    with torch.no_grad():
+        transforms = T.Compose([T.ToTensor()])
+        data, label = valset[5]
+        print(data)
+        output = model(data.unsqueeze(0))
+        output = torch.argmax(output, dim=1)
+    print(output.size())
+    imgg = showimg(output.permute(1, 2, 0))
    
-    # plt.imshow(imgg)
-    # plt.show()
-    # exit()
+    plt.imshow(imgg)
+    plt.show()
+    exit()
     # print(trainset[0])
     
     # print(trainset[0][1])
