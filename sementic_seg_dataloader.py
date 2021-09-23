@@ -31,7 +31,7 @@ from PIL import Image
 #                      ])
 
 colormap = np.array([(0, 0, 0),  # 0=Unknow
-                     (255, 255, 0),  # 1=Barren,
+                     (255, 0, 0),  # 1=Barren,
                     ])
 # classes = ['Unknow', 'Barren', 'Water', 'Forest', 'Rangeland', 'Agriculture', 'Urban']
 classes = ["BackGround", "Tool Flank"]
@@ -41,7 +41,7 @@ cm2lbl = np.zeros(256 ** 3)
 for i, cm in enumerate(colormap):
     """Build the index of the color map"""
     cm2lbl[(cm[0] * 256 + cm[1]) * 256 + cm[2]] = i  # 建立索引
-
+    
 def image2label(im):
     """find the mast index of map"""
     data = np.array(im, dtype='int32')
@@ -201,9 +201,9 @@ class TOOLDATA(Dataset):
         # mask = TF.crop(mask, i, j, h, w)
 
         # Random horizontal flipping
-        if random.random() > 0.5:
-            image = TF.hflip(image)
-            mask = TF.hflip(mask)
+        # if random.random() > 0.5:
+        #     image = TF.hflip(image)
+        #     mask = TF.hflip(mask)
 
         # Random vertical flipping
         # if random.random() > 0.5:
