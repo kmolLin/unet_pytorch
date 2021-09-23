@@ -69,13 +69,18 @@ def test(model, valsetloader):
             data, target = data.to(device), target.to(device)
 
             output = model(data)
+            # print(output.shape)
             output = torch.argmax(output, dim=1)
             for i in range(output.shape[0]):
                 out = output[i]
                 tar = target[i]
+                a = out.cpu().detach().numpy()
+                b = tar.cpu().detach().numpy()
+                print(np.nonzero(b))
+                exit()
                 iou_outputs.append(out.cpu().detach().numpy())
                 iou_labels.append(tar.cpu().detach().numpy())
-        
+
         meaniou = mean_iou_score(np.concatenate(iou_outputs), np.concatenate(iou_labels))
         # print(f"mean iou accuracy {t}")
     return meaniou
@@ -148,5 +153,9 @@ if __name__ == '__main__':
     model = UNet(n_channels=1, n_classes=2)
     model.to(device)   
     model.to(device)
+
+    model.load_state_dict(torch.load("save_model/unet_t.pt"))
+    accuracy = test(model, valsetloader)
+    exit()
     train(model, 90)
     torch.save(model.state_dict(), "save_model/unet_t.pt")

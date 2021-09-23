@@ -71,13 +71,16 @@ def mean_iou_score(pred, labels):
     '''
     mean_iou = 0
     for i in range(2):
+        print(i)
         tp_fp = np.sum(pred == i)
         tp_fn = np.sum(labels == i)
+        print(tp_fp)
+        print(tp_fn)
         tp = np.sum((pred == i) * (labels == i))
         iou = tp / (tp_fp + tp_fn - tp)
         mean_iou += iou / 2.0
         # print('class #%d : %1.5f'%(i, iou))
-    # print('\nmean_iou: %f\n' % mean_iou)
+    print('\n mean_iou: %f\n' % mean_iou)
 
     return mean_iou
 
