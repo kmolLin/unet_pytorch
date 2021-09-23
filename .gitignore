@@ -131,3 +131,4 @@ dmypy.json
 /save_model
 /train_data
 /val_data
+.idea/
